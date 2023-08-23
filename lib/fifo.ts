@@ -1,14 +1,12 @@
 import StaticFIFO from "./static.ts";
 
 export class FIFO<T> {
-    private capacity: number;
     private head: StaticFIFO<T>;
     private tail: StaticFIFO<T>;
     public length: number;
 
     constructor(capacity: number = 16) {
-        this.capacity = capacity;
-        this.head = new StaticFIFO<T>(this.capacity);
+        this.head = new StaticFIFO<T>(capacity);
         this.tail = this.head;
         this.length = 0;
     }
