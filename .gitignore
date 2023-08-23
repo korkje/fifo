@@ -1,0 +1,8 @@
+# VS Code
+.vscode/
+
+# Data folder
+/data/
+
+# macOS
+.DS_Store
