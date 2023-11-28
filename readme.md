@@ -17,4 +17,10 @@ console.log(queue.shift()); // 2
 console.log(queue.shift()); // 3
 
 console.log(queue.shift()); // undefined
+
+// Can be used as an async iterable
+
+for await (const value of queue) {
+	console.log(value);
+}
 ```
