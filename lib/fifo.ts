@@ -1,19 +1,15 @@
 import StaticFIFO from "./static.ts";
 
-export const END = Symbol("Stream ended.");
-export const ERROR = Symbol("Stream errored.");
-
-export type Enqueueable<T> = T | Promise<T> | typeof END | typeof ERROR;
-export type Resolver<T> = (value: T | PromiseLike<T>) => void;
+export type Resolver<T> = (value: T) => void;
 
 export class FIFO<T> {
-    private head: StaticFIFO<Enqueueable<T>>;
-    private tail: StaticFIFO<Enqueueable<T>>;
+    private head: StaticFIFO<T>;
+    private tail: StaticFIFO<T>;
     public length: number;
-    private resolve: null | Resolver<Enqueueable<T>> = null;
+    private resolve: null | Resolver<T> = null;
 
     constructor(capacity: number = 16) {
-        this.head = new StaticFIFO<Enqueueable<T>>(capacity);
+        this.head = new StaticFIFO<T>(capacity);
         this.tail = this.head;
         this.length = 0;
     }
@@ -24,7 +20,7 @@ export class FIFO<T> {
         this.length = 0;
     }
 
-    public push(value: Enqueueable<T>) {
+    public push(value: T) {
         ++this.length;
         
         if (this.resolve) {
@@ -69,24 +65,20 @@ export class FIFO<T> {
         return value;
     }
     
-    close() {
-        this.push(END);
-    }
-    
       async *[Symbol.asyncIterator]() {
         while (true) {
             const shifted = this.shift();
-    
-            const value = shifted ||
-            await new Promise<Enqueueable<T>>((res) => {
-                this.resolve = res;
-            });
-    
-            if (value === END || value === ERROR) {
-                break;
+            
+            if (shifted !== undefined) {
+                yield shifted;
+                continue;
             }
     
-            yield value;
+            const next = await new Promise<T>((res) => {
+                this.resolve = res;
+            });
+            
+            yield next;
         }
       }
 }
