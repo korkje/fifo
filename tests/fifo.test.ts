@@ -39,23 +39,20 @@ Deno.test("Big", () => {
 
 Deno.test("AsyncIterable", async () => {
     const queue = new FIFO<number>();
-    
     const values: number[] = [];
-    
+
     (async () => {
         for await (const value of queue) {
             values.push(value);
-        }  
-    })()
-    
+        }
+    })();
+
     queue.push(1);
     queue.push(2);
     queue.push(3);
-    
-    await new Promise((res) => {
-        setTimeout(res, 0);
-    })
-    
+
+    await new Promise(resolve => setTimeout(resolve));
+
     assertEquals(values, [1, 2, 3]);
     assertEquals(queue.length, 0);
-})
+});

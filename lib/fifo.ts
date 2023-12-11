@@ -1,12 +1,10 @@
 import StaticFIFO from "./static.ts";
 
-export type Resolver<T> = (value: T) => void;
-
 export class FIFO<T> {
     private head: StaticFIFO<T>;
     private tail: StaticFIFO<T>;
+    private resolve?: (value: T) => void;
     public length: number;
-    private resolve: null | Resolver<T> = null;
 
     constructor(capacity: number = 16) {
         this.head = new StaticFIFO<T>(capacity);
@@ -22,10 +20,10 @@ export class FIFO<T> {
 
     public push(value: T) {
         ++this.length;
-        
+
         if (this.resolve) {
-            this.resolve(value); 
-            this.resolve = null;
+            this.resolve(value);
+            this.resolve = undefined;
             return;
         }
 
@@ -64,23 +62,19 @@ export class FIFO<T> {
 
         return value;
     }
-    
-      async *[Symbol.asyncIterator]() {
+
+    async *[Symbol.asyncIterator]() {
         while (true) {
             const shifted = this.shift();
-            
+
             if (shifted !== undefined) {
                 yield shifted;
                 continue;
             }
-    
-            const next = await new Promise<T>((res) => {
-                this.resolve = res;
-            });
-            
-            yield next;
+
+            yield await new Promise<T>(resolve => this.resolve = resolve);
         }
-      }
+    }
 }
 
 export default FIFO;
