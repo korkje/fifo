@@ -19,13 +19,13 @@ export class FIFO<T> {
     }
 
     public push(value: T) {
-        ++this.length;
-
         if (this.resolve) {
             this.resolve(value);
             this.resolve = undefined;
             return;
         }
+
+        ++this.length;
 
         if (!this.head.push(value)) {
             const prev = this.head;
@@ -44,7 +44,7 @@ export class FIFO<T> {
 
         if (value === undefined && this.tail.next) {
             const next = this.tail.next;
-            this.tail.next = null;
+            this.tail.next = undefined;
             this.tail = next;
 
             return this.tail.shift();
@@ -65,10 +65,8 @@ export class FIFO<T> {
 
     async *[Symbol.asyncIterator]() {
         while (true) {
-            const shifted = this.shift();
-
-            if (shifted !== undefined) {
-                yield shifted;
+            if (this.length) {
+                yield this.shift()!;
                 continue;
             }
 
