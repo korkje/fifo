@@ -63,7 +63,13 @@ export class FIFO<T> {
         return value;
     }
 
-    async *[Symbol.asyncIterator]() {
+    public *[Symbol.iterator]() {
+        while (this.length) {
+            yield this.shift()!;
+        }
+    }
+
+    public async *[Symbol.asyncIterator]() {
         while (true) {
             if (this.length) {
                 yield this.shift()!;

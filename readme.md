@@ -17,10 +17,18 @@ console.log(queue.shift()); // 2
 console.log(queue.shift()); // 3
 
 console.log(queue.shift()); // undefined
+```
 
-// Can be used as an async iterable
+Supports both sync and async iteration.
 
-for await (const value of queue) {
-	console.log(value);
+```ts
+// Consumes queue
+for (const item of queue) {
+  console.log(item);
+}
+
+// Consumes queue, waits for new items
+for await (const item of queue) {
+  console.log(item);
 }
 ```
