@@ -14,9 +14,9 @@ export class FIFO<T> {
     public length: number;
 
     /**
-     * Creates a new FIFO queue with the given capacity.
+     * Creates a new FIFO queue with the given (initial) capacity.
      *
-     * @param capacity - The capacity of the queue (power of two).
+     * @param capacity - Initial capacity (power of two).
      */
     constructor(capacity: number = 16) {
         this.head = new StaticFIFO<T>(capacity);
