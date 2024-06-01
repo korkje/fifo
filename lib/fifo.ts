@@ -35,7 +35,7 @@ export class FIFO<T> {
         }
     }
 
-    public shift() {
+    public shift(): T | undefined {
         if (this.length !== 0) {
             --this.length;
         }
@@ -53,7 +53,7 @@ export class FIFO<T> {
         return value;
     }
 
-    public peek() {
+    public peek(): T | undefined {
         const value = this.tail.peek();
 
         if (value === undefined && this.tail.next) {
@@ -63,13 +63,13 @@ export class FIFO<T> {
         return value;
     }
 
-    public *[Symbol.iterator]() {
+    public *[Symbol.iterator](): Generator<T> {
         while (this.length) {
             yield this.shift()!;
         }
     }
 
-    public async *[Symbol.asyncIterator]() {
+    public async *[Symbol.asyncIterator](): AsyncGenerator<T> {
         while (true) {
             if (this.length) {
                 yield this.shift()!;
