@@ -1,0 +1,4 @@
+{
+    "name": "@korkje/fifo",
+    "exports": "./mod.ts"
+}
