@@ -1,8 +1,8 @@
 # fifo
-Simple first-in-first-out queue for Deno.
+Simple and fast first-in-first-out queue.
 
 ```ts
-import FIFO from "https://deno.land/x/fifo/mod.ts";
+import FIFO from "jsr:@korkje/fifo";
 
 const queue = new FIFO<number>();
 
