@@ -1,4 +1,5 @@
-# fifo
+# fifo [![JSR](https://jsr.io/badges/@korkje/fifo)](https://jsr.io/@korkje/fifo)
+
 Simple and fast first-in-first-out queue.
 
 ```ts
